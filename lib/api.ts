@@ -7,7 +7,7 @@ interface FetchNotesResponse {
   totalPages: number;
 }
 
-interface CreateNoteProps {
+export interface CreateNoteData {
   title: string;
   tag: 'Todo' | 'Work' | 'Personal' | 'Meeting' | 'Shopping';
   content: string;
@@ -44,7 +44,7 @@ export const fetchNotes = async (
   return response.data;
 };
 
-export const createNote = async (newNote: CreateNoteProps): Promise<Note> => {
+export const createNote = async (newNote: CreateNoteData): Promise<Note> => {
   const response = await axios.post<Note>('/notes', newNote);
   return response.data;
 };

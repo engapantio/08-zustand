@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { Toaster, toast } from 'react-hot-toast';
@@ -9,8 +10,6 @@ import { fetchNotes } from '@/lib/api';
 import NoteList from '@/components/NoteList/NoteList';
 import SearchBox from '@/components/SearchBox/SearchBox';
 import Pagination from '@/components/Pagination/Pagination';
-import Modal from '@/components/Modal/Modal';
-import NoteForm from '@/components/NoteForm/NoteForm';
 import Loading from '@/app/loading';
 import Error from './error';
 
@@ -21,7 +20,7 @@ interface NotesClientProps {
 export default function NotesClient({ tag }: NotesClientProps) {
   const [search, setSearch] = useState<string>('');
   const [page, setPage] = useState<number>(1);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const router = useRouter();
 
   const { data, error, isSuccess, isError, isLoading } = useQuery({
     queryKey: ['notes', search, page, tag],
@@ -43,13 +42,13 @@ export default function NotesClient({ tag }: NotesClientProps) {
     setSearch(value);
   }, 400);
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
+  // const openModal = () => {
+  //   setIsModalOpen(true);
+  // };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  // const closeModal = () => {
+  //   setIsModalOpen(false);
+  // };
 
   return (
     <div className={css.app}>
@@ -59,7 +58,10 @@ export default function NotesClient({ tag }: NotesClientProps) {
         {isSuccess && totalPages > 1 && (
           <Pagination page={page} totalPages={totalPages} setPage={setPage} />
         )}
-        <button className={css.button} onClick={openModal}>
+        <button
+          className={css.button}
+          onClick={() => router.push('/notes/action/create')}
+        >
           Create note +
         </button>
       </div>
@@ -68,11 +70,6 @@ export default function NotesClient({ tag }: NotesClientProps) {
         <Error error={error} reset={() => fetchNotes(search, page, tag)} />
       )}
       {data?.notes && totalNotes > 0 && <NoteList notes={data?.notes} />}
-      {isModalOpen && (
-        <Modal onClose={closeModal}>
-          <NoteForm onCancel={closeModal} />
-        </Modal>
-      )}
     </div>
   );
 }
