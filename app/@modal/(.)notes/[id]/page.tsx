@@ -19,10 +19,10 @@ export async function generateMetadata({
   const { id } = await params;
   const note = await fetchNoteById(id);
   return {
-    title: `Note titled: ${note.title} `,
+    title: `Note: ${note.title} `,
     description: `${note.content.slice(0, 32)}`,
     openGraph: {
-      title: `Note titled: ${note.title} `,
+      title: `Note: ${note.title} `,
       description: `${note.content.slice(0, 32)}`,
       url: `https://notehub.com/notes/${id}`,
       images: [

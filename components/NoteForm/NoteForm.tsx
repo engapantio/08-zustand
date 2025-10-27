@@ -4,16 +4,10 @@ import { useState, useId } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
-import { useDraftNoteStore } from '@/lib/stores/noteStore';
+import { initialDraft, useDraftNoteStore } from '@/lib/stores/noteStore';
 import css from './NoteForm.module.css';
 import { createNote, CreateNoteData } from '@/lib/api';
 import Loading from '@/app/loading';
-
-// const initialValues: NoteFormValues = {
-//   title: '',
-//   content: '',
-//   tag: 'Todo',
-// };
 
 const tagsList = ['Work', 'Personal', 'Meeting', 'Shopping', 'Todo'];
 
@@ -64,7 +58,7 @@ export default function NoteForm() {
             type="text"
             name="title"
             className={css.input}
-            defaultValue={draft?.title}
+            defaultValue={draft?.title ?? initialDraft.title}
             onChange={handleInput}
             minLength={3}
             maxLength={50}
@@ -79,7 +73,7 @@ export default function NoteForm() {
             name="content"
             rows={8}
             className={css.textarea}
-            defaultValue={draft?.content}
+            defaultValue={draft?.content ?? initialDraft.content}
             onChange={handleInput}
             maxLength={50}
           />
@@ -91,7 +85,7 @@ export default function NoteForm() {
             id={`${fieldId}-tag`}
             name="tag"
             className={css.select}
-            defaultValue={draft?.tag}
+            defaultValue={draft?.tag ?? initialDraft.tag}
             onChange={handleInput}
             required
           >

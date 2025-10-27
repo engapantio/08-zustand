@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { CreateNoteData } from '../api';
 
 interface DraftNoteStore {
@@ -7,14 +8,23 @@ interface DraftNoteStore {
   clearDraft: () => void;
 }
 
-const initialDraft: CreateNoteData = {
+export const initialDraft: CreateNoteData = {
   title: '',
   content: '',
   tag: 'Todo',
 };
 
-export const useDraftNoteStore = create<DraftNoteStore>()(set => ({
-  draft: initialDraft,
-  setDraft: note => set(() => ({ draft: note })),
-  clearDraft: () => set(() => ({ draft: initialDraft })),
-}));
+export const useDraftNoteStore = create<DraftNoteStore>()(
+  persist(
+    set => ({
+      draft: initialDraft,
+      setDraft: note => set(() => ({ draft: note })),
+      clearDraft: () => set(() => ({ draft: initialDraft })),
+    }),
+    {
+      // Ключ у localStorage
+      name: 'note-draft',
+      partialize: state => ({ draft: state.draft }),
+    }
+  )
+);
