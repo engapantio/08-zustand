@@ -2,7 +2,7 @@
 
 import { useState, useId } from 'react';
 import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import { initialDraft, useDraftNoteStore } from '@/lib/store/noteStore';
 import css from './NoteForm.module.css';
@@ -14,6 +14,7 @@ const tagsList = ['Work', 'Personal', 'Meeting', 'Shopping', 'Todo'];
 export default function NoteForm() {
   const [isDisabled, setIsDisabled] = useState(false);
   const fieldId = useId();
+  const queryClient = useQueryClient();
   const router = useRouter();
   const { draft, setDraft, clearDraft } = useDraftNoteStore();
 
@@ -32,6 +33,7 @@ export default function NoteForm() {
     mutationFn: createNote,
     onSuccess: () => {
       toast.success('Note added!', { position: 'bottom-center' });
+      queryClient.invalidateQueries({queryKey: ['notes']});
       clearDraft();
       router.push('/notes/filter/all');
     },
@@ -42,7 +44,6 @@ export default function NoteForm() {
       const values = Object.fromEntries(formData) as unknown as CreateNoteData;
       setIsDisabled(!isDisabled);
       newNote.mutate(values);
-      clearDraft();
     }
   };
 
