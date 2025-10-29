@@ -33,7 +33,7 @@ export default function NoteForm() {
     mutationFn: createNote,
     onSuccess: () => {
       toast.success('Note added!', { position: 'bottom-center' });
-      queryClient.invalidateQueries({queryKey: ['notes']});
+      queryClient.invalidateQueries({ queryKey: ['notes'] });
       clearDraft();
       router.push('/notes/filter/all');
     },
@@ -53,13 +53,13 @@ export default function NoteForm() {
     <>
       <form className={css.form} action={handleSubmit}>
         <div className={css.formGroup}>
-          <label htmlFor="title">Title</label>
+          <label htmlFor={`${fieldId}-title`}>Title</label>
           <input
             id={`${fieldId}-title`}
             type="text"
             name="title"
             className={css.input}
-            defaultValue={draft?.title ?? initialDraft.title}
+            value={draft?.title ?? initialDraft.title}
             onChange={handleInput}
             minLength={3}
             maxLength={50}
@@ -68,25 +68,25 @@ export default function NoteForm() {
         </div>
 
         <div className={css.formGroup}>
-          <label htmlFor="content">Content</label>
+          <label htmlFor={`${fieldId}-content`}>Content</label>
           <textarea
             id={`${fieldId}-content`}
             name="content"
             rows={8}
             className={css.textarea}
-            defaultValue={draft?.content ?? initialDraft.content}
+            value={draft?.content ?? initialDraft.content}
             onChange={handleInput}
-            maxLength={50}
+            maxLength={500}
           />
         </div>
 
         <div className={css.formGroup}>
-          <label htmlFor="tag">Tag</label>
+          <label htmlFor={`${fieldId}-tag`}>Tag</label>
           <select
             id={`${fieldId}-tag`}
             name="tag"
             className={css.select}
-            defaultValue={draft?.tag ?? initialDraft.tag}
+            value={draft.tag ?? initialDraft.tag}
             onChange={handleInput}
             required
           >
